@@ -26,7 +26,7 @@ public class AiService {
     public String askLLM(String prompt) {
 
         OpenRouterRequest req = new OpenRouterRequest(
-                "google/gemma-3n-e2b-it:free",
+                "arcee-ai/trinity-mini:free",
                 List.of(new OpenRouterRequest.Message("user", prompt))
         );
         System.out.println("API KEY = " + apiKey);
