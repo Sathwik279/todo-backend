@@ -2,6 +2,8 @@ package com.sathwik.auth.auth_service.entity;
 
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.UUID;
 
@@ -39,6 +41,7 @@ public class TodoEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private UserEntity user;   // FK reference
 
     public TodoEntity(UserEntity user, String title, String description) {
