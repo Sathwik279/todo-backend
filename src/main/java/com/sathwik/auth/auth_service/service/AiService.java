@@ -1,20 +1,21 @@
 package com.sathwik.auth.auth_service.service;
 
-import com.sathwik.auth.auth_service.dto.OpenRouterRequest;
-import com.sathwik.auth.auth_service.dto.OpenRouterResponse;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.List;
+import com.sathwik.auth.auth_service.dto.OpenRouterRequest;
+import com.sathwik.auth.auth_service.dto.OpenRouterResponse;
 
 @Service
 public class AiService {
 
-    @Value("${openrouter.api.key}")
+    @Value("${gemini.api.key}")
     private String apiKey;
 
-    @Value("${openrouter.url}")
+    @Value("${gemini.api.url}")
     private String url;
 
     private final WebClient webClient;
