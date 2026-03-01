@@ -7,7 +7,6 @@ import com.sathwik.auth.auth_service.repository.UserRepository;
 import com.sathwik.auth.auth_service.service.JwtService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
