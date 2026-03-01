@@ -1,7 +1,6 @@
 package com.sathwik.auth.auth_service.controller;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -25,6 +24,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import com.sathwik.auth.auth_service.service.TodoService;
 import com.sathwik.auth.auth_service.service.SseService;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.List;
 import java.util.Map;
