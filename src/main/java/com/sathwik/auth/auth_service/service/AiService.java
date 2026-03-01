@@ -1,22 +1,38 @@
 package com.sathwik.auth.auth_service.service;
 
+<<<<<<< HEAD
 import com.sathwik.auth.auth_service.dto.GeminiRequest;
 import com.sathwik.auth.auth_service.dto.GeminiResponse;
 import com.sathwik.auth.auth_service.repository.TodoRepository;
 import jakarta.transaction.Transactional;
+=======
+import java.util.List;
+
+>>>>>>> f3fd717e0eb0c683a376a02d7c8d849a2c78e534
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+<<<<<<< HEAD
+=======
+import com.sathwik.auth.auth_service.dto.OpenRouterRequest;
+import com.sathwik.auth.auth_service.dto.OpenRouterResponse;
+
+>>>>>>> f3fd717e0eb0c683a376a02d7c8d849a2c78e534
 @Service
 public class AiService {
 
     @Value("${gemini.api.key}")
     private String apiKey;
 
+<<<<<<< HEAD
     @Value("${gemini.model}")
     private String model;
+=======
+    @Value("${gemini.api.url}")
+    private String url;
+>>>>>>> f3fd717e0eb0c683a376a02d7c8d849a2c78e534
 
     private final WebClient webClient;
     private final TodoRepository todoRepo;
