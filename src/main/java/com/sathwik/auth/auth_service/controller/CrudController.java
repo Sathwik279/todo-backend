@@ -1,6 +1,8 @@
 package com.sathwik.auth.auth_service.controller;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import com.sathwik.auth.auth_service.dto.TodoCreateRequest;
 import com.sathwik.auth.auth_service.entity.TodoEntity;
@@ -19,18 +23,12 @@ import com.sathwik.auth.auth_service.entity.UserEntity;
 import com.sathwik.auth.auth_service.repository.TodoRepository;
 import com.sathwik.auth.auth_service.repository.UserRepository;
 import com.sathwik.auth.auth_service.service.AiService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
-import com.sathwik.auth.auth_service.service.TodoService;
 import com.sathwik.auth.auth_service.service.SseService;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-
-import java.util.List;
-import java.util.Map;
+import com.sathwik.auth.auth_service.service.TodoService;
 
 @RestController
 @RequestMapping("/crud")
+@CrossOrigin(origins="*")
 public class CrudController {
 
     private final TodoRepository todoRepo;
