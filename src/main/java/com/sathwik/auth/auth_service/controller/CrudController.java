@@ -1,18 +1,24 @@
 package com.sathwik.auth.auth_service.controller;
 
-import com.sathwik.auth.auth_service.dto.AiRequest;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.sathwik.auth.auth_service.dto.TodoCreateRequest;
 import com.sathwik.auth.auth_service.entity.TodoEntity;
 import com.sathwik.auth.auth_service.entity.UserEntity;
 import com.sathwik.auth.auth_service.repository.TodoRepository;
 import com.sathwik.auth.auth_service.repository.UserRepository;
-import com.sathwik.auth.auth_service.service.AiService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/crud")
