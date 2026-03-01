@@ -103,5 +103,6 @@ public class CrudController {
                         ResponseEntity.status(404)
                                 .body(Map.of("error", "Todo not found"))
                 );
+
     }
 }

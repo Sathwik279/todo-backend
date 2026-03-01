@@ -8,7 +8,6 @@ import java.util.UUID;
 @Table(name = "users")
 public class UserEntity {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String userId;
