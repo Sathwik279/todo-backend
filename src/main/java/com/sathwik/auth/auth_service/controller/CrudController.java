@@ -7,12 +7,16 @@ import com.sathwik.auth.auth_service.entity.UserEntity;
 import com.sathwik.auth.auth_service.repository.TodoRepository;
 import com.sathwik.auth.auth_service.repository.UserRepository;
 import com.sathwik.auth.auth_service.service.AiService;
+import com.sathwik.auth.auth_service.service.SseService;
+import com.sathwik.auth.auth_service.service.TodoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/crud")
@@ -20,10 +24,23 @@ public class CrudController {
 
     private final TodoRepository todoRepo;
     private final UserRepository userRepo;
+    private final TodoService todoService;
+    private final AiService aiService;
+    private final SseService sseService;
 
-    public CrudController(TodoRepository todoRepo,UserRepository userRepo){
+
+    public CrudController(TodoService todoService,TodoRepository todoRepo, UserRepository userRepo,AiService aiService, SseService sseService){
         this.todoRepo = todoRepo;
         this.userRepo = userRepo;
+        this.todoService = todoService;
+        this.aiService = aiService;
+        this.sseService = sseService;
+    }
+
+    @GetMapping(value="/stream", produces="text/event-stream")
+    public SseEmitter streamEvents(Authentication authentication){
+        String userId = authentication.getName();
+        return sseService.subscribe(userId);
     }
 
     @GetMapping("/todos")
@@ -44,10 +61,10 @@ public class CrudController {
         String userId = authentication.getName(); // principal = userId
 
         UserEntity user = userRepo.findById(userId).orElseThrow();
-
-        todoRepo.save(new TodoEntity(user, dto.getTitle(), dto.getDescription()));
-
-        return ResponseEntity.status(201).body(Map.of("msg", "Todo created"));
+        // THE FIX
+        TodoEntity newTodo = new TodoEntity(user, dto.getTitle(), dto.getDescription());
+        TodoEntity savedTodo = todoRepo.save(newTodo); // Capture the returned object!
+        return ResponseEntity.status(201).body(savedTodo); // Return the saved object
     }
 
     // Add this method inside your CrudController class
@@ -67,6 +84,10 @@ public class CrudController {
                 );
     }
 
+    public static boolean calcuateFetchAi(boolean titleChanged,boolean descriptionChanged,String currentAiContent){
+        if(titleChanged||descriptionChanged||currentAiContent.equals(""))return true;
+        return false;
+    }
     @PutMapping("/todo/{id}")
     public ResponseEntity<TodoEntity> updateTodo(
             @PathVariable String id,
@@ -74,18 +95,33 @@ public class CrudController {
             Authentication authentication
     ) {
         String userId = authentication.getName();
+
         return todoRepo.findByIdAndUser_UserId(id, userId)
                 .map(todo -> {
+                    System.out.println(dto.getAiContent());
+
+                    // 🔹 Check changes BEFORE updating
+                    boolean titleChanged = !todo.getTitle().equals(dto.getTitle());
+                    boolean descriptionChanged =
+                            !Objects.equals(todo.getDescription(), dto.getDescription());
+                    // 1. UPDATE THE FIELDS IN MEMORY FIRST (You accidentally deleted these 4 lines!)
                     todo.setTitle(dto.getTitle());
                     todo.setDescription(dto.getDescription());
                     todo.setDone(dto.isDone());
                     todo.setAiEnabled(dto.isAiEnabled());
-                    todo.setAiContent(dto.getAiContent());
 
-                    TodoEntity updatedTodo = todoRepo.save(todo);
+                    // 2. Save the user's text to the database FAST
+                    TodoEntity savedTodo = todoRepo.save(todo);
 
-                    return ResponseEntity.ok(updatedTodo);
-                }).orElse(ResponseEntity.notFound().build());
+                    // 3. FIRE AND FORGET: If AI is needed, hand it to the background thread
+                    if (dto.isAiEnabled() && calcuateFetchAi(titleChanged, descriptionChanged, dto.getAiContent())) {
+                        aiService.generateAndSaveAiContent(savedTodo.getId(), dto.getDescription(),userId);
+                    }
+
+                    // 4. Return immediately! The UI stays lightning fast.
+                    return ResponseEntity.ok(savedTodo);
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/todo/{id}")
